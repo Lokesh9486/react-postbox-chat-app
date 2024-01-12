@@ -1,0 +1,24 @@
+.input-field{
+    input{
+        border-radius: 10px;
+        background-image: url("../../../public/images/email.png");
+        background-size: 20px;
+        background-repeat: no-repeat;
+        background-position: top 50% right 20px;
+        padding-right:40px ;
+        &:focus{
+            box-shadow: none;
+            border-color: var(--bs-border-color);
+            ~label{
+                color: var(--text-hash) !important; 
+                font-size: var(--fs17);
+            }
+        }
+    }
+    .error-messsage{
+        color: var(--primary-red);
+        font-size: var(--fs16);
+        position: absolute;
+        padding-left: 10px;
+    }
+}

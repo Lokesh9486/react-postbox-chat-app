@@ -1,0 +1,80 @@
+.signup-section {
+  padding: 3%;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  .top_nav {
+    ul {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 5%;
+      padding-left: 0;
+      li {
+        list-style: none;
+        a {
+            text-decoration: none;
+        }
+        &.home-li{
+            a{
+                color: var(--text-hash);
+            }
+        }
+      }
+    }
+  }
+  form{
+    margin-top: 4%;
+    margin-left: 2%;
+    width: clamp(500px,40vw,700px);
+    .common-text{
+        a{
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--primary-red);
+        }
+    }
+    .input-container{
+        display: grid;
+        margin-top: 3%;
+        column-gap:var(--fs20);
+        row-gap: var(--fs40);
+        grid-template-areas: "item1 item2" "item3 item3" "item4 item4";
+        &.this_is_signIn{
+            grid-template-areas: "item1" "item2" ;
+        }
+        .item1{
+            grid-area: item1;
+        }
+        .item2{
+            grid-area: item2;
+        }
+        .item3{
+            grid-area: item3;
+        }
+        .item4{
+            grid-area: item4;
+        }
+    }
+    .btn-container{
+        display: flex;
+        align-items: center;
+        margin-top: 5%;
+        gap: 5%;
+        button{
+            width: 50%;
+            padding-block: 2%;
+            border-radius: 40px;
+            border: 0;
+            color: var(--text-white);
+        }
+        .reset-btn{
+             background:var(--text-hash);
+        }
+        .submit-btn{
+             background-color: var(--primary-red);
+        }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+.logo-container {
+  display: flex;
+  align-items: center;
+  .image-container{
+    width: 70px;
+  }
+  .logo-text {
+    color: var(--black-color);
+    font-size: var(--fs30);
+    strong {
+      color: var(--primary-red);
+    }
+  }
+}

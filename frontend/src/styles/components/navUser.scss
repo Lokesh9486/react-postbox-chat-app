@@ -1,0 +1,72 @@
+.navuser-container {
+  display: flex;
+  align-items: center;
+  padding-inline: var(--fs20);
+  padding-block: var(--fs10);
+  &.active{
+    background-color: #ccc;
+  }
+  &.online-user{
+    .user-logo{
+      &::after{
+        content: " ";
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: rgb(21, 172, 21);
+      }
+    }
+  }
+  .user-logo {
+    position: relative;
+    max-width: 40px;
+    img{
+      overflow: hidden;
+      border-radius: 50%;
+    }
+  }
+  .last-msg-con {
+    width: 100%;
+    padding-inline: var(--fs20);
+    display: flex;
+    gap:6px;
+    flex-direction: column;
+    .secondary-con1 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .user-name{
+        font-size: var(--fs17);
+        font-weight: 600;
+    }
+    .time{
+          font-size: var(--fs13);
+          color: var(--text-hash);
+      }
+      .unreaded-msg{
+        min-width: 16px;
+        aspect-ratio: 1/1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: var(--fs12);
+        background-color: var(--primary-red);
+        color: var(--text-white);
+      }
+    }
+    .secondary-con2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .last-msg{
+        font-size: var(--fs16);
+        color: var(--black-color);
+      }
+      
+    }
+  }
+}

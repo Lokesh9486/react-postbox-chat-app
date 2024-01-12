@@ -1,0 +1,12 @@
+.another_userDetails{
+    width: 100%;
+    padding-block: var(--fs15);
+    .topic{
+        font-size: var(--fs19);
+        color: var(--text-hash);
+        img{
+            width: var(--fs26);
+            height: var(--fs26);
+        }
+    }
+}

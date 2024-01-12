@@ -1,0 +1,5 @@
+# dependencies
+/node_modules
+
+#confog env files
+/backend/config/config.env
