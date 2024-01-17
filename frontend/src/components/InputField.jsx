@@ -1,4 +1,4 @@
-import "@/styles/components/inputField.scss";
+import "../styles/components/inputField.scss";
 
 const InputField = ({inputChange,...item}) => {
   const {id, type, label, value,image,index,error,errMessage}=item;

@@ -1,9 +1,8 @@
-"use client";
-import { Logo } from "@/components/Logo";
-import Link from "next/link";
-import "@/styles/pages/signup.scss";
-import InputField from "@/components/InputField";
-import SuccessMsg from "@/components/SuccessMsg";
+import { Logo } from "../components/Logo";
+import {Link} from "react-router-dom";
+import "../styles/pages/signup.scss";
+import InputField from "../components/InputField";
+import SuccessMsg from "../components/SuccessMsg";
 
 const AuthStructure = ({
   isSignIn,

@@ -1,4 +1,4 @@
-import { getCookie } from 'cookies-next';
+// import { getCookie } from 'cookies-next';
 
 const getCookies=()=>{
     const pattern = RegExp("token=.[^;]*");

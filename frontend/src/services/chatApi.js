@@ -1,6 +1,4 @@
-"use client";
-
-import getCookies from "@/utils/getCookies";
+import getCookies from "../utils/getCookies";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 
 export const chatApi = createApi({

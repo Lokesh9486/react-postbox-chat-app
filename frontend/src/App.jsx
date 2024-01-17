@@ -1,13 +1,16 @@
-import { BroswerRouter ,Routes,Route} from "react-router-dom"
+
+export async function loader(){
+  // const cookieStore = cookies()
+  // const token = cookieStore.get('token')
+  // if(!token){
+  //   return redirect("/signin");
+  // }
+  // return  redirect("/chat");
+}
 
 function App() {
-
   return (
-    <BroswerRouter>
-      <Routes>
-        <Route path="/" ></Route>
-      </Routes>
-    </BroswerRouter>
+    <h1>dsfsd</h1>
   )
 }
 
