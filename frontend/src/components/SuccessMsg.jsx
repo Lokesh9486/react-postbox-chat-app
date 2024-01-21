@@ -7,7 +7,7 @@ const SucccessMsg = ({isSuccess,message}) => {
       className={`message-con ${isSuccess?"active":""}`}
       >
         <div className="image-con">
-        <img src="/images/success.png"/>
+        <img src="assets/images/success.png"/>
         </div>
         <div>
           <h5>Success</h5>

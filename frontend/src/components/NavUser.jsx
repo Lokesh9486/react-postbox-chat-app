@@ -1,9 +1,8 @@
-import Image from "next/legacy/image";
-import dummyprofile from "../../public/images/dummyprofile.png";
+import dummyprofile from "../../public/assets/images/dummyprofile.png";
 import { useDispatch } from "react-redux";
-import "@/styles/components/navUser.scss";
-import { chatApi } from "@/services/chatApi";
-import { viewUserAction } from "@/features/auth";
+import "../styles/components/navUser.scss";
+import { chatApi } from "../services/chatApi";
+import { viewUserAction } from "../features/auth";
 
 export const NavUser = ({setSelectedUser,selectedUser,activeUser,
   chatUser:{_id,avator, firstName, lastName, email, role,isOnline },
@@ -18,7 +17,7 @@ export const NavUser = ({setSelectedUser,selectedUser,activeUser,
     <li className={`navuser-container ${selectedUser===_id?"active":""} 
     ${activeUser(_id)?"online-user":""}`} onClick={()=>selectUser(_id)}>
         <div className="user-logo">
-       <Image src={avator?avator:dummyprofile} onClick={()=>viewUserFun(_id)} width="100%" height="100%" objectFit="cover" alt="avator"/>
+       <img src={avator?avator:dummyprofile} onClick={()=>viewUserFun(_id)} width="100%" height="100%" objectFit="cover" alt="avator"/>
         </div>
         <div className="last-msg-con">
             <div className="secondary-con1">

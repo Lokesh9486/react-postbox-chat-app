@@ -1,18 +1,16 @@
-import Image from "next/legacy/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import {Link, useLocation} from "react-router-dom";
 
 export const LinkComponent = ({ image, active, path }) => {
-  const router = usePathname();
+  const location = useLocation();
+  console.log(location.pathname);
   return (
-    <li className={router == path ? "active" : ""}>
+    <li className={location.pathname == path ? "active" : ""}>
       <Link href="/">
         <div>
-          <Image
-            src={`/images/${router == path ? active : image}.jpg`}
+          <img
+            src={`assets/images/${location.pathname == path ? active : image}.jpg`}
             width="100%"
             height="100%"
-            objectFit="contain"
             alt="demo-image"
           />
         </div>

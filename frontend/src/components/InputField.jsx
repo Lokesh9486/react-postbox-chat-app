@@ -12,7 +12,7 @@ const InputField = ({inputChange,...item}) => {
         placeholder={label}
         value={value}
         onChange={(e)=> inputChange(id, e.target.value)}
-        style={{backgroundImage:!error?`url(images/${image}.png)`:""}}
+        style={{backgroundImage:!error?`url(assets/images/${image}.png)`:""}}
       />
       <label htmlFor="floatingPassword">{label}</label>
       {error&&<p className="error-messsage">{errMessage}</p>}

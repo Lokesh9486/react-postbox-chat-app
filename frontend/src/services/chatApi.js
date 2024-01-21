@@ -1,5 +1,6 @@
 import getCookies from "../utils/getCookies";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
+import * as rtkQuery from '@reduxjs/toolkit/query/react';
+const { createApi, fetchBaseQuery } = rtkQuery.default ?? rtkQuery;
 
 export const chatApi = createApi({
   reducerPath: "chatApi",

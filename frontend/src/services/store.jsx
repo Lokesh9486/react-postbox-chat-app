@@ -1,11 +1,10 @@
-"use client"
 import { Provider } from "react-redux";
-import authReducer from '../features/auth';
-import { chatApi } from "./chatApi";
-const { configureStore } = require("@reduxjs/toolkit");
-const { authApi } = require("./authApi");
+import authReducer from '../features/auth.js';
+import { chatApi } from "./chatApi.js";
+import { configureStore } from "@reduxjs/toolkit";
+import { authApi } from "./authApi.js";
 
-const store=configureStore({
+export const store=configureStore({
     reducer:{
         auth:authReducer,
      [authApi.reducerPath]:authApi.reducer,
@@ -17,4 +16,4 @@ const store=configureStore({
 
 export default function Providers({children}){
     return <Provider store={store}>{children}</Provider>
-};
+}

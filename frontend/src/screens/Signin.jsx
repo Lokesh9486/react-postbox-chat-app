@@ -28,7 +28,7 @@ const SignIn = () => {
       },
     ]);
   
-    const routes=useNavigate();
+    const navigate=useNavigate();
     const dispatch=useDispatch();
   
     const [signin, {data, isSuccess,isLoading,error,isError }] = useSignInMutation();
@@ -37,7 +37,7 @@ const SignIn = () => {
       const errorValu = registerSubmit(e, formData, setFormData).every(
         ({ error }) => !error
       );
-      if (errorValu) {
+      if (errorValu&&!isLoading&&!data) {
         signin({
           email: formData[0].value,
           password: formData[1].value,
@@ -46,16 +46,16 @@ const SignIn = () => {
     }
   
     useEffect(() => {
-      if (data){
+      if (data&&!isLoading){
         document.cookie = `token= ${data.token}; expires= ${new Date( Date.now() + 7 * 24 * 60 * 60 * 1000 ) }; path=/;`;
         if(data?.message===`Login successfully and OTP send ${formData[0].value}`){
           localStorage.setItem("postman",JSON.stringify({email:formData[0].value,OTP:data.user.OTPExpries}));
-          setTimeout(()=>routes.push('/otp'),1000);
+          setTimeout(()=>navigate('/otp'),1000);
         }
         else{
           dispatch(chatApi.util.invalidateTags(['User']))
           setTimeout(()=>{
-            routes.push('/chat')
+            navigate('/chat')
           },1000);
         }
       }
@@ -69,6 +69,7 @@ const SignIn = () => {
       formSubmitFunc,
       data, 
       isSuccess,
+      isLoading,
       error,
       isError,
       message:data?.message||"Login Successfully",

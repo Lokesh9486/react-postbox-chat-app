@@ -1,7 +1,6 @@
-import useOnClickOutside from '@/HOC/useOnClickOutside';
+// import useOnClickOutside from '../HOC/useOnClickOutside';
 import { createContext, useContext, useRef, useState } from 'react';
-import Image from 'next/image'
-import trash from "../../public/images/trash.png";
+// import trash from "../../public/assets/images/";
 
 const DropDownContext=createContext();
 
@@ -9,7 +8,7 @@ export const DropDown = ({children}) => {
     const [open,setOpen]=useState(false);
     const selectContainerRef = useRef(null);
     const clickOutsideHandler = () => setOpen(false);
-    useOnClickOutside(selectContainerRef,clickOutsideHandler);
+    // useOnClickOutside(selectContainerRef,clickOutsideHandler);
 
     return (
         <div className='position-relative' ref={selectContainerRef}>

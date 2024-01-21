@@ -1,4 +1,4 @@
-import "@/styles/components/skeleton.scss";
+import "../styles/components/skeleton.scss";
 
 const Skeleton = () => {
   return (

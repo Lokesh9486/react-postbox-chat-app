@@ -13,6 +13,7 @@ const AuthStructure = ({
   isSuccess,
   error,
   isError,
+  isLoading,
   message,
   navDiscribe,
   navigateTo,
@@ -36,12 +37,12 @@ const AuthStructure = ({
       <nav className="top_nav">
         <ul>
           <li>
-            <Link href="/">
+            <Link to="/">
               <Logo />
             </Link>
           </li>
           <li className="home-li">
-            <Link href="/">Home</Link>
+            <Link to="/">Home</Link>
           </li>
         </ul>
       </nav>
@@ -49,7 +50,7 @@ const AuthStructure = ({
         <p className="secondary-topic">Start for free</p>
         <h1 className="big-topic">{topic}</h1>
         <p className="common-text">
-          {subtopic} <Link href={navigateTo}>{navDiscribe}</Link>{" "}
+          {subtopic} <Link to={navigateTo}>{navDiscribe}</Link>{" "}
         </p>
         <div className={`input-container ${isSignIn?"this_is_signIn":""}`}>
           {formData.map((item, index) => (
@@ -61,11 +62,11 @@ const AuthStructure = ({
             Reset form
           </button>
           <button type="submit" className="submit-btn">
-            {/* {true?
-          <Image src={dotLoader} alt="loader" className="loader-img m-auto"/>:
+            {isLoading?
+          <img src="assets/images/dotloader.gif" alt="loader" className="loader-img m-auto"/>:
             "Create account"
-          } */}
-            Create account
+          }
+            {/* Create account */}
           </button>
         </div>
       </form>

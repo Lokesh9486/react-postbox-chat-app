@@ -1,3 +1,6 @@
+import { Outlet } from "react-router-dom"
+import "bootstrap/dist/css/bootstrap.css";
+import "./globals.css";
 
 export async function loader(){
   // const cookieStore = cookies()
@@ -10,7 +13,7 @@ export async function loader(){
 
 function App() {
   return (
-    <h1>dsfsd</h1>
+    <Outlet/>
   )
 }
 
