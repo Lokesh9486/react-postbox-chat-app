@@ -46,7 +46,7 @@ const SignIn = () => {
     }
   
     useEffect(() => {
-      if (data&&!isLoading){
+      if (data&&!isLoading&&isSuccess){
         document.cookie = `token= ${data.token}; expires= ${new Date( Date.now() + 7 * 24 * 60 * 60 * 1000 ) }; path=/;`;
         if(data?.message===`Login successfully and OTP send ${formData[0].value}`){
           localStorage.setItem("postman",JSON.stringify({email:formData[0].value,OTP:data.user.OTPExpries}));

@@ -5,6 +5,8 @@ import { useSignUpMutation } from "../services/authApi";
 // import { useRouter } from 'next/navigation'
 import AuthStructure from "../HOC/AuthStructure";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { emailAction } from "../features/auth";
 
 const Signup = () => {
   const [formData, setFormData] = useState([
@@ -46,7 +48,8 @@ const Signup = () => {
     },
   ]);
 
-  const routes=useNavigate();
+  const navigate=useNavigate();
+  const dispatch=useDispatch();
 
   const [signUp, {data, isSuccess,isLoading,error,isError }] = useSignUpMutation();
 
@@ -68,7 +71,7 @@ const Signup = () => {
     if (isSuccess){
       localStorage.setItem("postman",JSON.stringify({email:formData[2].value,OTP:data.OTPExpries}));
       dispatch(emailAction(formData[2].value));
-      setTimeout(()=>routes.push('/otp'),1000);
+      setTimeout(()=>navigate('/otp'),1000);
     }
   },[isSuccess]);
 
@@ -79,6 +82,7 @@ const Signup = () => {
     formSubmitFunc,
     data, 
     isSuccess,
+    isLoading,
     error,
     isError,
     message:"Registered Successfully",

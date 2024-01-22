@@ -1,4 +1,4 @@
-import dummyprofile from "../../public/assets/images/dummyprofile.png";
+import dummyprofile from "/assets/images/dummyprofile.png";
 import { useDispatch } from "react-redux";
 import "../styles/components/navUser.scss";
 import { chatApi } from "../services/chatApi";
@@ -10,7 +10,7 @@ export const NavUser = ({setSelectedUser,selectedUser,activeUser,
     const dispatch=useDispatch();
     const selectUser=(id)=>{
       setSelectedUser(id);
-      // dispatch(chatApi.util.invalidateTags(['Chat']))
+      dispatch(chatApi.util.invalidateTags(['Chat']))
     }
     const viewUserFun=(id)=>dispatch(viewUserAction(id));
   return (

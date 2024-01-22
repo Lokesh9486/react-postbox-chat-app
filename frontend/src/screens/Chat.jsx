@@ -1,11 +1,14 @@
 import "../styles/pages/home.scss";
 import {Link,useNavigate} from "react-router-dom";
 import { NavUser } from "../components/NavUser";
-import video from "../../public/assets/images/videolight.jpg";
-import call from "../../public/assets/images/callligth.jpg";
-import cancel from "../../public/assets/images/cancel.png";
-import about from "../../public/assets/images/about.png";
-import email from "../../public/assets/images/email.png";
+import video from "/assets/images/videolight.jpg";
+import call from "/assets/images/callligth.jpg";
+import cancel from "/assets/images/cancel.png";
+import about from "/assets/images/about.png";
+import email from "/assets/images/email.png";
+import sendMsg from "/assets/images/email.png";
+import happyemoji from "/assets/images/happyemoji.png";
+import dummyprofile from "/assets/images/dummyprofile.png";
 import AnotherUserDetails from "../components/AnotherUserDetails";
 import {
   useDeleteMessageMutation,
@@ -15,9 +18,6 @@ import {
   useGetChatedUsersQuery,
 } from "../services/chatApi";
 import { useEffect, useRef, useState } from "react";
-import sendMsg from "../../public/assets/images/sendMsg.png";
-import happyemoji from "../../public/assets/images/happyemoji.png";
-import dummyprofile from "../../public/assets/images/dummyprofile.png";
 import { socket } from "../utils/socket";
 import { getViewUserAction, viewUserAction } from "../features/auth";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,20 +36,20 @@ export default function Chat() {
   const [typing,setTyping]=useState(undefined);
 //   const { data, isSuccess } = useGetChatedUsersQuery();
 //   console.log("Home ~ data:", data)
-//   const { data: userDetails,isLoading,isError,error } = useGetUserDetailsQuery();
+  const { data: userDetails,isLoading,isError,error } = useGetUserDetailsQuery();
 //   const { data: searchUserData } = useSearchUserProfileQuery(searchUser, { skip: !searchUser});
 //   const [deleteMessage, { data: deletedMessageResult }] = useDeleteMessageMutation();
-//   const {data:userData,isSuccess:userDataSuccess}=useGetUserQuery(viewUser,{skip:!viewUser});
-//   const [isConnected, setIsConnected] = useState(socket.connected);
+  const {data:userData,isSuccess:userDataSuccess}=useGetUserQuery(viewUser,{skip:!viewUser});
+  const [isConnected, setIsConnected] = useState(socket.connected);
 
-//   useEffect(()=>{
-//     if(selectedUser){
-//       socket.emit("getSpecificChat",selectedUser,(response) => {
-//       console.log("socket.emit ~ response:", response)
-//       setSpecificUserMsg(response);
-//       })
-//     }
-//   },[selectedUser]);
+  useEffect(()=>{
+    if(selectedUser){
+      socket.emit("getSpecificChat",selectedUser,(response) => {
+      console.log("socket.emit ~ response:", response)
+      setSpecificUserMsg(response);
+      })
+    }
+  },[selectedUser]);
 
 //   useEffect(() => {
 //     if(deletedMessageResult){ setSpecificUserMsg(specificUserMsg.filter(({_id})=>_id!==deletedMessageResult.id)) }
@@ -127,42 +127,42 @@ export default function Chat() {
       };
   },[]);
 
-//   useEffect(() => {
-//     const demo=(data) => {
-//       if (selectedUser == data.user._id) {
-//         setSpecificUserMsg(prev=>[...prev, data.chat]);
-//         setTyping(false);
-//       }
-//       else {
-//        const chat=chatedUser.map((item) => {
-//          if ((data.chat.sendedBy === item.chatUser._id) && (data.chat.sendedBy != selectedUser)) {
-//            return {
-//              ...item,
-//              message: {
-//                ...item.message,
-//                unReadedMsg: item.message.unReadedMsg
-//                  ? item.message.unReadedMsg + 1
-//                  : 1,
-//              },
-//            };
-//          }
-//          return item;
-//        })
-//       setChatUser(chat);
-//       }
-//       if (!chatedUser.some(({ chatUser: { _id } }) => _id == data.user._id)) {
-//         setChatUser([
-//           ...chatedUser,
-//           { message: { ...data.chat }, chatUser: { ...data.user } },
-//         ]);
-//         setSelectedUser(data.user._id);
-//       }
-//     }
-//     socket?.on("recieve-msg", demo);
-//     return()=>{
-//       socket?.off("recieve-msg", demo);
-//     }
-//   });
+  useEffect(() => {
+    const demo=(data) => {
+      if (selectedUser == data.user._id) {
+        setSpecificUserMsg(prev=>[...prev, data.chat]);
+        setTyping(false);
+      }
+      else {
+       const chat=chatedUser.map((item) => {
+         if ((data.chat.sendedBy === item.chatUser._id) && (data.chat.sendedBy != selectedUser)) {
+           return {
+             ...item,
+             message: {
+               ...item.message,
+               unReadedMsg: item.message.unReadedMsg
+                 ? item.message.unReadedMsg + 1
+                 : 1,
+             },
+           };
+         }
+         return item;
+       })
+      setChatUser(chat);
+      }
+      if (!chatedUser.some(({ chatUser: { _id } }) => _id == data.user._id)) {
+        setChatUser([
+          ...chatedUser,
+          { message: { ...data.chat }, chatUser: { ...data.user } },
+        ]);
+        setSelectedUser(data.user._id);
+      }
+    }
+    socket?.on("recieve-msg", demo);
+    return()=>{
+      socket?.off("recieve-msg", demo);
+    }
+  });
   
   const activeUser = (id) =>{
     return onlineUsers?.some((key) => key == id);

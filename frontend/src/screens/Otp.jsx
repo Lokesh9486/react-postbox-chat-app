@@ -48,34 +48,35 @@ const Otp = () => {
   };
 
   useEffect(() =>{
-    // if(!localStorage.getItem("postman")) return navigate("/signup");
+    if(!localStorage.getItem("postman")) return navigate("/signup");
     // if(JSON?.parse(localStorage?.getItem("postman")||{})){
-    //     const {email,OTP}=JSON.parse(localStorage.getItem("postman"));
-    //     if(!email||!OTP)return navigate("/signup");
-    //     setEmail(email);
-    //     const gettedDate=new Date(OTP);
-    //     const interval= setInterval(() =>{
-    //      const curretnDate=new Date();
-    //      const diffMs=gettedDate.getTime() - curretnDate.getTime();
-    //      if (diffMs<=0){return clearInterval(interval)}
-    //      const min = ~~+(diffMs / (1000 * 60) % 60);
-    //      const sec = ~~+(diffMs / (1000) % 60); 
-    //      setTime({min,sec});
-    //   } , 1000);
+        const {email,OTP}=JSON.parse(localStorage.getItem("postman"));
+        if(!email||!OTP)return navigate("/signup");
+        setEmail(email);
+        const gettedDate=new Date(OTP);
+        const interval= setInterval(() =>{
+         const curretnDate=new Date();
+         const diffMs=gettedDate.getTime() - curretnDate.getTime();
+         if (diffMs<=0){return clearInterval(interval)}
+         const min = ~~+(diffMs / (1000 * 60) % 60);
+         const sec = ~~+(diffMs / (1000) % 60); 
+         setTime({min,sec});
+      } , 1000);
 
-//     }
-//    return()=>{
-//     clearInterval(interval);
-//     localStorage.removeItem("postman");
-//   }
+    // }
+   return()=>{
+    console.log("afhasfjh")
+    clearInterval(interval);
+    localStorage.removeItem("postman");
+  }
   },[]);
 
   useEffect(()=>{
     if(isSuccess){
       // setCookie('token', data.token,{maxAge: 7 * 24 * 60 * 60 * 1000,path:"/"  });
-    //   document.cookie = `token= ${data.token}; expires= ${new Date( Date.now() + 7 * 24 * 60 * 60 * 1000 ) }; path=/;`;
-    //   localStorage.removeItem("postman");
-    //   setTimeout(()=>navigate('/'),1000);
+      // document.cookie = `token= ${data.token}; expires= ${new Date( Date.now() + 7 * 24 * 60 * 60 * 1000 ) }; path=/;`;
+      // localStorage.removeItem("postman");
+      // setTimeout(()=>navigate('/'),1000);
     }
   },[isSuccess]);
 

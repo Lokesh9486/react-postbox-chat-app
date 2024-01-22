@@ -42,14 +42,14 @@ function Body({value}){
   
     return (
         <ul className={`dropdown-menu end-0 ${open?"d-block":""}`} >
-            {value.map(item=>{
-         return <li>
+            {value.map((item,idx)=>{
+         return <li key={idx}>
            <button
              type="button"
              className='d-flex align-items-center justify-content-between px-3'
              onClick={() =>console.log("end")}
            >
-             <p>{item}</p>  <Image src={trash} alt="trash" /> 
+             <p>{item}</p>  <img src="assets/images/about.png" alt="trash" /> 
            </button>
          </li>
 

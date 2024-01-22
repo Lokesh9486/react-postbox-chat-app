@@ -1,8 +1,8 @@
 import "../styles/pages/home.scss";
 import {Link,useNavigate} from "react-router-dom";
-import logo from "../../public/assets/images/postboxlogo.png";
+import logo from "/assets/images/postboxlogo.png";
 import { LinkComponent } from "../components/LinkComponent";
-import dummyprofile from "../../public/assets/images/dummyprofile.png";
+import dummyprofile from "/assets/images/dummyprofile.png";
 import { useGetUserDetailsQuery } from "../services/chatApi";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
