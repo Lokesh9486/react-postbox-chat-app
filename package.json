@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon backend/server.js",
     "dev": "set NODE_ENV=developement&&set CONNECTION_STRING=mongodb://localhost:27017/postbox-chat-app && nodemon backend/server.js",
-    "prod": "set NODE_ENV=production&& nodemon backend/server.js"
+    "prod": "set NODE_ENV=production && nodemon backend/server.js"
   },
   "author": "kondapuram parthiban  lokesh",
   "license": "ISC",

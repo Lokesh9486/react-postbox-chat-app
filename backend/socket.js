@@ -11,7 +11,7 @@ const initializeSocket = (server) => {
   io = socketIO(server, {
     pingTineOut: 60000,
     cors: {
-      origin: "http://localhost:5173",
+      origin: "*",
     },
   });
   instrument(io, {

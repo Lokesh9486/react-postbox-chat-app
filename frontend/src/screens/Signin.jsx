@@ -47,7 +47,8 @@ const SignIn = () => {
   
     useEffect(() => {
       if (data&&!isLoading&&isSuccess){
-        document.cookie = `token= ${data.token}; expires= ${new Date( Date.now() + 7 * 24 * 60 * 60 * 1000 ) }; path=/;`;
+        console.log("data:", data)
+        // document.cookie = `token= ${data.token}; expires= ${new Date( Date.now() + 7 * 24 * 60 * 60 * 1000 ) }; path=/;secure: false;httpOnly: true`;
         if(data?.message===`Login successfully and OTP send ${formData[0].value}`){
           localStorage.setItem("postman",JSON.stringify({email:formData[0].value,OTP:data.user.OTPExpries}));
           setTimeout(()=>navigate('/otp'),1000);
@@ -55,7 +56,7 @@ const SignIn = () => {
         else{
           dispatch(chatApi.util.invalidateTags(['User']))
           setTimeout(()=>{
-            navigate('/chat')
+            // navigate('/chat')
           },1000);
         }
       }

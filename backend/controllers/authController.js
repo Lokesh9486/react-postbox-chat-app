@@ -20,6 +20,7 @@ exports.singUp = catchAsyncError(async (req, res, next) => {
 
 exports.signIn = catchAsyncError(async (req, res, next) => {
   const { email, password } = req.body;
+  console.log("email, password:", email, password)
 
   if (!email || !password) {
     return next(new ErrorHandler("Please enter email and password", 400));

@@ -1,4 +1,4 @@
-// import useOnClickOutside from '../HOC/useOnClickOutside';
+import useOnClickOutside from '../HOC/useOnClickOutside';
 import { createContext, useContext, useRef, useState } from 'react';
 // import trash from "../../public/assets/images/";
 
@@ -8,7 +8,7 @@ export const DropDown = ({children}) => {
     const [open,setOpen]=useState(false);
     const selectContainerRef = useRef(null);
     const clickOutsideHandler = () => setOpen(false);
-    // useOnClickOutside(selectContainerRef,clickOutsideHandler);
+    useOnClickOutside(selectContainerRef,clickOutsideHandler);
 
     return (
         <div className='position-relative' ref={selectContainerRef}>
@@ -49,7 +49,7 @@ function Body({value}){
              className='d-flex align-items-center justify-content-between px-3'
              onClick={() =>console.log("end")}
            >
-             <p>{item}</p>  <img src="assets/images/about.png" alt="trash" /> 
+             <p>{item}</p>  <img src="assets/images/trash.png" alt="trash" /> 
            </button>
          </li>
 

@@ -6,6 +6,7 @@ const setToken = (user, statusCode, response, message) => {
     ),
     httpOnly: true,
   };
+  console.log("token",token)
   return response
     .status(statusCode)
     .cookie("token", token, options)

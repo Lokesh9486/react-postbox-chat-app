@@ -63,8 +63,8 @@ const AuthStructure = ({
           </button>
           <button type="submit" className="submit-btn">
             {isLoading?
-          <img src="assets/images/dotloader.gif" alt="loader" className="loader-img m-auto"/>:
-            "Create account"
+          <img src="assets/images/dotloader.svg" alt="loader" className="loader-img m-auto"/>:
+          "Create account"
           }
             {/* Create account */}
           </button>

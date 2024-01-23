@@ -6,13 +6,13 @@ export const chatApi = createApi({
   reducerPath: "chatApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8000/chat",
-    prepareHeaders: (headers) => {
-      const token=getCookies()
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
+    // prepareHeaders: (headers) => {
+    //   const token=getCookies()
+    //   if (token) {
+    //     headers.set("authorization", `Bearer ${token}`);
+    //   }
+    //   return headers;
+    // },
   }),
   tagTypes: ['User','Chat'],
   endpoints: (builder) => ({
