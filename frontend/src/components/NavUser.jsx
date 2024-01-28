@@ -17,7 +17,7 @@ export const NavUser = ({setSelectedUser,selectedUser,activeUser,
     <li className={`navuser-container ${selectedUser===_id?"active":""} 
     ${activeUser(_id)?"online-user":""}`} onClick={()=>selectUser(_id)}>
         <div className="user-logo">
-       <img src={avator?avator:dummyprofile} onClick={()=>viewUserFun(_id)} width="100%" height="100%" objectFit="cover" alt="avator"/>
+       <img src={avator?avator:dummyprofile} onClick={()=>viewUserFun(_id)} alt="avator"/>
         </div>
         <div className="last-msg-con">
             <div className="secondary-con1">

@@ -22,8 +22,9 @@
   }
   .user-logo {
     position: relative;
-    max-width: 40px;
+    width: 40px;
     img{
+      width: 100%;
       overflow: hidden;
       border-radius: 50%;
     }

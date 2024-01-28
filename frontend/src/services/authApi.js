@@ -4,6 +4,11 @@ export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8000/user",
+    credentials: "include"
+  // prepareHeaders: (headers) => {
+  //     headers.set("credentials", `include`);
+  //     return headers;
+  //   },
   }),
   endpoints: (builder) => ({
     signUp: builder.mutation({

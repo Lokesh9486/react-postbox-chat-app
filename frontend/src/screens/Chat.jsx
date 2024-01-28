@@ -34,33 +34,32 @@ export default function Chat() {
   const [searchUser, setSearchUser] = useState();
   const [onlineUsers, setOnlineUser] = useState([]);
   const [typing,setTyping]=useState(undefined);
-//   const { data, isSuccess } = useGetChatedUsersQuery();
-//   console.log("Home ~ data:", data)
-  // const { data: userDetails,isLoading,isError,error } = useGetUserDetailsQuery();
+  const { data: userDetails,isLoading,isError,error } = useGetUserDetailsQuery();
   // const { data: searchUserData } = useSearchUserProfileQuery(searchUser, { skip: !searchUser});
-//   const [deleteMessage, { data: deletedMessageResult }] = useDeleteMessageMutation();
-  // const {data:userData,isSuccess:userDataSuccess}=useGetUserQuery(viewUser,{skip:!viewUser});
-  // const [isConnected, setIsConnected] = useState(socket.connected);
+  const [deleteMessage, { data: deletedMessageResult }] = useDeleteMessageMutation();
+  const {data:userData,isSuccess:userDataSuccess}=useGetUserQuery(viewUser,{skip:!viewUser});
+  const [isConnected, setIsConnected] = useState(socket.connected);
+  console.log("Chat ~ isConnected:", isConnected)
 
-  // useEffect(()=>{
-  //   if(selectedUser){
-  //     socket.emit("getSpecificChat",selectedUser,(response) => {
-  //     console.log("socket.emit ~ response:", response)
-  //     setSpecificUserMsg(response);
-  //     })
-  //   }
-  // },[selectedUser]);
+  useEffect(()=>{
+    if(selectedUser){
+      socket.emit("getSpecificChat",selectedUser,(response) => {
+      console.log("socket.emit ~ response:", response)
+      setSpecificUserMsg(response);
+      })
+    }
+  },[selectedUser]);
 
-//   useEffect(() => {
-//     if(deletedMessageResult){ setSpecificUserMsg(specificUserMsg.filter(({_id})=>_id!==deletedMessageResult.id)) }
-//   }, [deletedMessageResult]);
+  useEffect(() => {
+    if(deletedMessageResult){ setSpecificUserMsg(specificUserMsg.filter(({_id})=>_id!==deletedMessageResult.id)) }
+  }, [deletedMessageResult]);
 
-//   useEffect(()=>{
-//     ulElement?.current?.scrollTo({
-//       top: ulElement?.current?.scrollHeight,
-//       behavior: "smooth",
-//     });
-//   },[specificUserMsg]);
+  useEffect(()=>{
+    ulElement?.current?.scrollTo({
+      top: ulElement?.current?.scrollHeight,
+      behavior: "smooth",
+    });
+  },[specificUserMsg]);
 
   const shortTime = new Intl.DateTimeFormat("en", {
     timeStyle: "short",
@@ -83,86 +82,83 @@ export default function Chat() {
     }
   };
 
-  // useEffect(() => {
-  //   const connection=(socket)=>setIsConnected(true);
-  //   const disConnection=()=> setIsConnected(false);
-  //   const overAllMessage=(data) => {
-  //     console.log("message ~ data:", data)
-  //     const value= data.map(({chatUser:{isOnline,_id}})=>{
-  //       if(isOnline){return _id}
-  //     });
-  //     setOnlineUser([...new Set([...onlineUsers,...value.filter(item=>item)])])
-  //     setChatUser(data);
-  //     console.log("message ~ data:", value)
-  //   }
-  //   const onlineUsersFun=(data) => {
-  //     console.log("onlineUsersFun ~ data:", data)
-  //     setOnlineUser([...onlineUsers,data])
-  //   }
-  //   const offlineUsers= (data) => {
-  //     console.log("offlineUsers ~ data:", data)
-  //     setOnlineUser(onlineUsers.filter(user=>user!=data))
-  //   };
-  //   const deleteMsg=(data) =>  setSpecificUserMsg(specificUserMsg.filter(({_id})=>_id!==data));
-  //   const typing=data=> setTyping(data);
-  //   const stopTyping=data=> setTyping(undefined);
+  useEffect(() => {
+    const connection=(socket)=>setIsConnected(true);
+    const disConnection=()=> setIsConnected(false);
+    const overAllMessage=(data) => {
+      const value= data.map(({chatUser:{isOnline,_id}})=>{
+        if(isOnline){return _id}
+      });
+      setOnlineUser([...new Set([...onlineUsers,...value.filter(item=>item)])])
+      setChatUser(data);
+      console.log("message ~ data:", value)
+    }
+    const onlineUsersFun=(data) => {
+      setOnlineUser([...onlineUsers,data])
+    }
+    const offlineUsers= (data) => {
+      setOnlineUser(onlineUsers.filter(user=>user!=data))
+    };
+    const deleteMsg=(data) =>  setSpecificUserMsg(specificUserMsg.filter(({_id})=>_id!==data));
+    const typing=data=> setTyping(data);
+    const stopTyping=data=> setTyping(undefined);
 
-  //   socket.connect();
-  //     socket.on("disconnect",disConnection);
-  //     socket.on("overAllMessage",overAllMessage);
-  //     socket.on("onlineUsers", onlineUsersFun);
-  //     socket.on("offlineUsers",offlineUsers);
-  //     socket.on("delete-msg", deleteMsg);
-  //     socket.on("typing",typing);
-  //     socket.on("stop typing",stopTyping);
-  //     return () => {
-  //       socket.off("connect",connection);
-  //       socket.off("overAllMessage",overAllMessage);
-  //       socket.off("onlineUsers", onlineUsersFun);
-  //       socket.off("offlineUsers",offlineUsers);
-  //       socket.off("delete-msg", deleteMsg);
-  //       socket.off("typing",typing);
-  //       socket.off("stop typing",stopTyping);
-  //       socket.disconnect();
-  //     };
-  // },[]);
+    socket.connect();
+      socket.on("disconnect",disConnection);
+      socket.on("overAllMessage",overAllMessage);
+      socket.on("onlineUsers", onlineUsersFun);
+      socket.on("offlineUsers",offlineUsers);
+      socket.on("delete-msg", deleteMsg);
+      socket.on("typing",typing);
+      socket.on("stop typing",stopTyping);
+      return () => {
+        socket.off("connect",connection);
+        socket.off("overAllMessage",overAllMessage);
+        socket.off("onlineUsers", onlineUsersFun);
+        socket.off("offlineUsers",offlineUsers);
+        socket.off("delete-msg", deleteMsg);
+        socket.off("typing",typing);
+        socket.off("stop typing",stopTyping);
+        socket.disconnect();
+      };
+  },[]);
 
-  // useEffect(() => {
-  //   const demo=(data) => {
-  //     if (selectedUser == data.user._id) {
-  //       setSpecificUserMsg(prev=>[...prev, data.chat]);
-  //       setTyping(false);
-  //     }
-  //     else {
-  //      const chat=chatedUser.map((item) => {
-  //        if ((data.chat.sendedBy === item.chatUser._id) && (data.chat.sendedBy != selectedUser)) {
-  //          return {
-  //            ...item,
-  //            message: {
-  //              ...item.message,
-  //              unReadedMsg: item.message.unReadedMsg
-  //                ? item.message.unReadedMsg + 1
-  //                : 1,
-  //            },
-  //          };
-  //        }
-  //        return item;
-  //      })
-  //     setChatUser(chat);
-  //     }
-  //     if (!chatedUser.some(({ chatUser: { _id } }) => _id == data.user._id)) {
-  //       setChatUser([
-  //         ...chatedUser,
-  //         { message: { ...data.chat }, chatUser: { ...data.user } },
-  //       ]);
-  //       setSelectedUser(data.user._id);
-  //     }
-  //   }
-  //   socket?.on("recieve-msg", demo);
-  //   return()=>{
-  //     socket?.off("recieve-msg", demo);
-  //   }
-  // });
+  useEffect(() => {
+    const demo=(data) => {
+      if (selectedUser == data.user._id) {
+        setSpecificUserMsg(prev=>[...prev, data.chat]);
+        setTyping(false);
+      }
+      else {
+       const chat=chatedUser.map((item) => {
+         if ((data.chat.sendedBy === item.chatUser._id) && (data.chat.sendedBy != selectedUser)) {
+           return {
+             ...item,
+             message: {
+               ...item.message,
+               unReadedMsg: item.message.unReadedMsg
+                 ? item.message.unReadedMsg + 1
+                 : 1,
+             },
+           };
+         }
+         return item;
+       })
+      setChatUser(chat);
+      }
+      if (!chatedUser.some(({ chatUser: { _id } }) => _id == data.user._id)) {
+        setChatUser([
+          ...chatedUser,
+          { message: { ...data.chat }, chatUser: { ...data.user } },
+        ]);
+        setSelectedUser(data.user._id);
+      }
+    }
+    socket?.on("recieve-msg", demo);
+    return()=>{
+      socket?.off("recieve-msg", demo);
+    }
+  });
   
   const activeUser = (id) =>{
     return onlineUsers?.some((key) => key == id);

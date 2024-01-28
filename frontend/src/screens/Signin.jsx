@@ -42,6 +42,20 @@ const SignIn = () => {
           email: formData[0].value,
           password: formData[1].value,
         });
+//         var headers = new Headers();
+// headers.append('Content-Type', 'application/json');
+// headers.append('Accept', 'application/json');
+
+// return fetch('http://localhost:8000/user/signin', {
+//     method: 'POST',
+//     redirect: 'follow',
+//     credentials: 'include', // Don't forget to specify this if you need cookies
+//     headers: headers,
+//     body: JSON.stringify({
+//       email: formData[0].value,
+//       password: formData[1].value,
+//     })
+// })
       }
     }
   

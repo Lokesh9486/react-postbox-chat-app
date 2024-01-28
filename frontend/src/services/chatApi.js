@@ -6,6 +6,7 @@ export const chatApi = createApi({
   reducerPath: "chatApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8000/chat",
+    credentials: "include"
     // prepareHeaders: (headers) => {
     //   const token=getCookies()
     //   if (token) {

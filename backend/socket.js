@@ -4,6 +4,7 @@ const User = require("./model/userModel");
 const Chat = require("./model/chatModel");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+var cookie = require("cookie")
 
 let userConectSocket;
 
@@ -11,60 +12,71 @@ const initializeSocket = (server) => {
   io = socketIO(server, {
     pingTineOut: 60000,
     cors: {
-      origin: "*",
+      origin: "http://localhost:5173",
+      credentials: true
     },
   });
   instrument(io, {
     auth: false,
   });
 
+  const getToken=(socket)=>{
+    const value=socket.handshake.headers.cookie;
+    const searchParams = new URLSearchParams(value);
+    
+    var myObject = {};
+    searchParams.forEach((value, key)=> {
+      myObject[key] = value;
+    });
+    return myObject.token;
+  }
+
   userConectSocket = io.of("/UserConnect");
 
   userConectSocket.on("connection", async (socket) => {
-    const token = socket.handshake.auth.token;
-    console.log("userConectSocket.on ~ token:", token)
+   const token=getToken(socket);
     const { id } = jwt.verify(token, process.env.JWT_SECRET_KEY);
     socket.join(id);
     await User.findByIdAndUpdate({ _id: id }, { $set: { isOnline: true} });
     socket.broadcast.emit("onlineUsers", id);
     const userId = new mongoose.Types.ObjectId(id);
-
-  const chat = await Chat.aggregate()
-    .match({ participants: userId })
-    .addFields({
-      otherUser: {
-        $filter: {
-          input: "$participants",
-          as: "otherUsers",
-          cond: {
-            $ne: ["$$otherUsers", userId],
+    const chat = await Chat.aggregate()
+      .match({ participants: userId })
+      .addFields({
+        otherUser: {
+          $filter: {
+            input: "$participants",
+            as: "otherUsers",
+            cond: {
+              $ne: ["$$otherUsers", userId],
+            },
           },
         },
-      },
-    })
-    .lookup({
-      from: "users",
-      localField: "otherUser",
-      foreignField: "_id",
-      as: "chatedUser",
-    })
-    .unwind("$chatedUser")
-    .group({
-      _id: "$chatedUser._id",
-      message: {
-        $last: {
-          message: "$message",
-          createdAt: "$createdAt",
+      })
+      .lookup({
+        from: "users",
+        localField: "otherUser",
+        foreignField: "_id",
+        as: "chatedUser",
+      })
+      .unwind("$chatedUser")
+      .group({
+        _id: "$chatedUser._id",
+        message: {
+          $last: {
+            message: "$message",
+            createdAt: "$createdAt",
+          },
         },
-      },
-      chatUser: { $first: "$chatedUser" },
-    })
-    .project(
-      "-chatUser.password -chatUser.OTP -chatUser.OTPExpries -chatUser.createdAt -chatUser.updatedAt -chatUser.__v -chatUser.IsOTPVerfied -_id"
-    )
-    .sort("-message.createdAt");
+        chatUser: { $first: "$chatedUser" },
+      })
+      .project(
+        "-chatUser.password -chatUser.OTP -chatUser.OTPExpries -chatUser.createdAt -chatUser.updatedAt -chatUser.__v -chatUser.IsOTPVerfied -_id"
+      )
+      .sort("-message.createdAt");
+  
+      socket.emit("overAllMessage",chat);
 
-    socket.emit("overAllMessage",chat);
 
     socket.on("send message",async(data,callback)=>{
       const { message, reciver  } = data;
@@ -107,7 +119,7 @@ const initializeSocket = (server) => {
       socket.to(data).emit("stop typing",false);
     });
     socket.on("disconnect", async () => {
-      const token = socket.handshake.auth.token;
+      console.log(token)
       const { id } = jwt.verify(token, process.env.JWT_SECRET_KEY);
       await User.findByIdAndUpdate({ _id: id }, { $set: { isOnline: false,lastSeen: Date.now() } });
       socket.broadcast.emit("offlineUsers", id);

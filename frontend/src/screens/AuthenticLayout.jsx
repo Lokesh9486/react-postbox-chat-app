@@ -47,9 +47,9 @@ export default function UserLayout({ children }) {
   const {data: userDetails,isLoading,isSuccess,isError,error} = useGetUserDetailsQuery();
   
   useEffect(() => {
-    // if (isError && !isSuccess) {
-    //   navigate("/signin");
-    // }
+    if (isError && !isSuccess) {
+      navigate("/signin");
+    }
   }, [isError,isSuccess]);
   return (
     <main className="chat-section">
