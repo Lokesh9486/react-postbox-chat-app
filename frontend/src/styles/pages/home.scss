@@ -47,17 +47,17 @@
               justify-content: center;
               width: 1.6em;
             }
-          }
-          &.active {
-            &::after {
-              content: "";
-              position: absolute;
-              width: 2px;
-              height: 100%;
-              border-radius: 5px;
-              top: 0;
-              left: 0;
-              border: 3px solid var(--black-color);
+            &.active {
+              &::after {
+                content: "";
+                position: absolute;
+                width: 2px;
+                height: 100%;
+                border-radius: 5px;
+                top: 0;
+                left: 0;
+                border: 3px solid var(--black-color);
+              }
             }
           }
         }
@@ -80,8 +80,8 @@
     .primary-nav-bar {
       grid-area: item2;
       border-right: 1px solid #ccc;
+      padding-inline: var(--fs20);
       .message-text{
-          padding-inline: var(--fs20);
           padding-block: var(--fs40);
           h5{
             font-size: var(--fs30);
@@ -92,7 +92,7 @@
       .user-search-input{
         width: 100%;
         padding-block: var(--fs11);
-        padding-left: 2em;
+        padding-left: 1em;
         // border: 0;
         border: 1px solid #ccc;
         border-radius: 5px;

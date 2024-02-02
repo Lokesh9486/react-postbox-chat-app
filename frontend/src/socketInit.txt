@@ -1,0 +1,78 @@
+
+connect with backend using url;
+const socket = io("http://localhost:8000/UserConnect");
+
+connecting command 
+socket.connect();
+
+event listening
+High Efficiency Kitchen Equipments
+socket.on("highEfficiencyDevice",data);
+data=[
+{
+    id:"439347932"
+    img:"http://localhost:3000/assets/images/Fridge_Icon.png",
+    device:"Fridge",
+    percentage:"25.6%",
+    status:"error"
+},
+{
+    id:"894185949"
+    img:"http://localhost:3000/assets/images/Oven_Icon.png",
+    device:"Oven",
+    percentage:"52.3%",
+    status:"error"
+},
+{
+    id:"815065654"
+    img:"http://localhost:3000/assets/images/Dishwasher_Icon.png",
+    device:"Dishwasher",
+    percentage:"73%",
+    status:"error"
+},
+{
+    id:"386354786"
+    img:"http://localhost:3000/assets/images/DeepFryer_Icon.png",
+    device:"Deep Fryer",
+    percentage:"53.1%",
+    status:"error"
+},
+{
+    id:"758181497"
+    img:"http://localhost:3000/assets/images/Oven_Icon.png",
+    device:"Coffe Brewer",
+    percentage:"48%",
+    status:"error"
+},
+{
+    id:"826601418"
+    img:"http://localhost:3000/assets/images/CoffeeBrewer_Icon.png",
+    device:"Grill",
+    percentage:"15%",
+    status:"error"
+},
+]
+
+turn off the event
+socket.off("highEfficiencyDevice",data);
+
+
+toggle Facility Management
+socket.emit("facilityManagement",{
+    id:"826601418",
+    status:"ON"
+})
+
+recieveing Facility Management
+socket.on("recieve-msg", data);
+data=[
+    {
+    id:"826601418",
+    name:"Day light"
+    status:"OFF"
+    }
+]
+
+
+disconnect with backend
+socket.disconnect();

@@ -22,12 +22,15 @@ const initializeSocket = (server) => {
 
   const getToken=(socket)=>{
     const value=socket.handshake.headers.cookie;
+    console.log("value:", value)
     const searchParams = new URLSearchParams(value);
+    console.log("searchParams:", searchParams)
     
     var myObject = {};
     searchParams.forEach((value, key)=> {
       myObject[key] = value;
     });
+    console.log(myObject)
     return myObject.token;
   }
 
@@ -35,6 +38,7 @@ const initializeSocket = (server) => {
 
   userConectSocket.on("connection", async (socket) => {
    const token=getToken(socket);
+    console.log("token:", token)
     const { id } = jwt.verify(token, process.env.JWT_SECRET_KEY);
     socket.join(id);
     await User.findByIdAndUpdate({ _id: id }, { $set: { isOnline: true} });
@@ -94,6 +98,22 @@ const initializeSocket = (server) => {
       }
     
       callback(chat)
+
+    })
+    socket.on("delete message",async(data,callback) => {
+      console.log("data:", data)
+      const chatId=new mongoose.Types.ObjectId(data.id);
+      	const chat=await Chat.findOneAndDelete({_id:chatId,sendedBy:{$eq:userId}});
+      	if(!chat){
+      	  return callback({error:"Couldn't find the chat"});
+      	}
+      	const participants=chat.participants.filter(id=>id!=userId);
+    	
+      	const {isOnline}=await User.findById(participants[0]);
+      	if(isOnline){
+      	  socket.to(participants[0].toString()).emit("delete-msg", chat._id );
+      	}
+      	return callback({chat:'chat deleted successfully',id:chat._id});
 
     })
 

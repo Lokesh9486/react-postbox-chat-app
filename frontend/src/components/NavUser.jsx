@@ -14,7 +14,7 @@ export const NavUser = ({setSelectedUser,selectedUser,activeUser,
     }
     const viewUserFun=(id)=>dispatch(viewUserAction(id));
   return (
-    <li className={`navuser-container ${selectedUser===_id?"active":""} 
+    <li className={`navuser-container rounded ${selectedUser===_id?"active":""} 
     ${activeUser(_id)?"online-user":""}`} onClick={()=>selectUser(_id)}>
         <div className="user-logo">
        <img src={avator?avator:dummyprofile} onClick={()=>viewUserFun(_id)} alt="avator"/>

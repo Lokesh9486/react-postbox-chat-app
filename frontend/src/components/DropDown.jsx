@@ -1,5 +1,6 @@
 import useOnClickOutside from '../HOC/useOnClickOutside';
 import { createContext, useContext, useRef, useState } from 'react';
+import { socket } from '../utils/socket';
 // import trash from "../../public/assets/images/";
 
 const DropDownContext=createContext();
@@ -37,19 +38,19 @@ function Header(){
     )
 }
 
-function Body({value}){
+function Body({value,id}){
     const {open}=useContext(DropDownContext);
-  
+    
     return (
         <ul className={`dropdown-menu end-0 ${open?"d-block":""}`} >
-            {value.map((item,idx)=>{
+            {value.map(({name,action},idx)=>{
          return <li key={idx}>
            <button
              type="button"
              className='d-flex align-items-center justify-content-between px-3'
-             onClick={() =>console.log("end")}
+             onClick={() =>action(id)}
            >
-             <p>{item}</p>  <img src="assets/images/trash.png" alt="trash" /> 
+             <p>{name}</p>  <img src="assets/images/trash.png" alt="trash" /> 
            </button>
          </li>
 

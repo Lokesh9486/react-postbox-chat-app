@@ -1,16 +1,15 @@
-import {Link, useLocation} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 
 export const LinkComponent = ({ image, active, path }) => {
-  const location = useLocation();
   return (
-    <li className={location.pathname == path ? "active" : ""}>
-      <Link href="/">
+    <li>
+      <NavLink to={path} className={({ isActive }) => isActive ? "active" : "" }>
           <img
-            src={`assets/images/${location.pathname == path ? active : image}.jpg`}
+            src={`assets/images/${image}.png`}
             alt="demo-image"
-            className="w-100"
+            className="sidebar-img"
           />
-      </Link>
+      </NavLink>
     </li>
   );
 };

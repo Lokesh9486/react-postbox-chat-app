@@ -1,8 +1,8 @@
 import "../styles/pages/home.scss";
 import {Link,useNavigate} from "react-router-dom";
 import { NavUser } from "../components/NavUser";
-import video from "/assets/images/videolight.jpg";
-import call from "/assets/images/callligth.jpg";
+import video from "/assets/images/videolight.png";
+import call from "/assets/images/callligth.png";
 import cancel from "/assets/images/cancel.png";
 import about from "/assets/images/about.png";
 import email from "/assets/images/email.png";
@@ -35,11 +35,10 @@ export default function Chat() {
   const [onlineUsers, setOnlineUser] = useState([]);
   const [typing,setTyping]=useState(undefined);
   const { data: userDetails,isLoading,isError,error } = useGetUserDetailsQuery();
-  // const { data: searchUserData } = useSearchUserProfileQuery(searchUser, { skip: !searchUser});
+  const { data: searchUserData } = useSearchUserProfileQuery(searchUser, { skip: !searchUser});
   const [deleteMessage, { data: deletedMessageResult }] = useDeleteMessageMutation();
   const {data:userData,isSuccess:userDataSuccess}=useGetUserQuery(viewUser,{skip:!viewUser});
   const [isConnected, setIsConnected] = useState(socket.connected);
-  console.log("Chat ~ isConnected:", isConnected)
 
   useEffect(()=>{
     if(selectedUser){
@@ -99,7 +98,9 @@ export default function Chat() {
     const offlineUsers= (data) => {
       setOnlineUser(onlineUsers.filter(user=>user!=data))
     };
-    const deleteMsg=(data) =>  setSpecificUserMsg(specificUserMsg.filter(({_id})=>_id!==data));
+    const deleteMsg=(data) =>{
+      console.log(data,specificUserMsg.filter(({_id})=>_id!==data));
+        setSpecificUserMsg(specificUserMsg.filter(({_id})=>_id!==data))};
     const typing=data=> setTyping(data);
     const stopTyping=data=> setTyping(undefined);
 
@@ -181,6 +182,19 @@ export default function Chat() {
       },timerLength);
     }
   }
+
+  const deletMsg=(id) => {
+    console.log("id:", id)
+    socket.emit("delete message",{
+      id,
+    },(response) => {
+      console.log(response)
+    });
+  }
+
+  const dropDownValue=[
+    {name:"Delete",action:deletMsg}
+  ]
   
   return (
     <>
@@ -234,7 +248,8 @@ export default function Chat() {
           <div className="chat-top-con">
             {
               (()=>{
-               const user = chatedUser.find(({chatUser})=>chatUser._id==selectedUser)
+               const user = [...searchUser,chatedUser].find(({chatUser})=>chatUser?._id==selectedUser)
+               console.log("user:", user)
               return <NavUser {...{ ...user, setSelectedUser, activeUser }}/>
               })()
             }
@@ -255,8 +270,8 @@ export default function Chat() {
                  {!isAnOtherUser&&
                   <DropDown>
                   <DropDown.Header></DropDown.Header>
-                  <DropDown.Body value={["Delete"]}></DropDown.Body>
-              </DropDown>
+                  <DropDown.Body value={dropDownValue} id={_id}></DropDown.Body>
+                  </DropDown>
                  }
                   <img
                     className="chat-user-profile"
@@ -293,7 +308,7 @@ export default function Chat() {
               onChange={(e) => userTyping(e)}
               placeholder="send message ...."
             />
-            <button type="submit" className="sendMsg-btn">
+            <button type="submit" className="sendMsg-btn p-0">
               <img src={sendMsg} alt="sendmsg" />
             </button>
           </form>
@@ -309,7 +324,7 @@ export default function Chat() {
           <div className="another-user-data">
             <div className="another-user-top">
               <p className="another-user">Contact details</p>
-              <button type="button"  onClick={()=>viewUserFun(undefined)}>
+              <button type="button" className="p-0" onClick={()=>viewUserFun(undefined)}>
                 <img src={cancel} alt="cancel" />
               </button>
             </div>

@@ -17,7 +17,7 @@ export default function UserLayout({ children }) {
     {
       image: "messagelight",
       active: "messagedark",
-      path: "/",
+      path: "/chat",
     },
     {
       image: "videolight",
