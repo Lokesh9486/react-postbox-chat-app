@@ -111,6 +111,7 @@ exports.searchUsersProfile = catchAsyncError(async (req, res, next) => {
     .project(
       "-OTP -OTPExpries -createdAt -updatedAt -__v -IsOTPVerfied -password"
     );
+    // "-chatUser.password -chatUser.OTP -chatUser.OTPExpries -chatUser.createdAt -chatUser.updatedAt -chatUser.__v -chatUser.IsOTPVerfied -_id"
   return res.status(200).json(users);
 });
 

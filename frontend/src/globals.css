@@ -110,3 +110,11 @@ body{
 .sidebar-img{
   width: var(--fs38);
 }
+.general-text-bold{
+  font-size: var(--fs17);
+    font-weight: 600;
+}
+.general-text{
+  font-size: var(--fs17);
+    font-weight: 600;
+}

@@ -122,13 +122,14 @@ const initializeSocket = (server) => {
       //   params: { toId },
       //   user: { id },
       // } = req;
+      const skip=data.skip?data.skip:0
       const toUser = await User.findById(data);
       // if (!toUser) {
       //   return next(new ErrorHandler("Recived ID is not found"));
       // }
       const toIdUser = new mongoose.Types.ObjectId(data);
       const idUser = new mongoose.Types.ObjectId(id);
-      const chat = await Chat.find({ participants: { $all: [toIdUser, idUser] } });
+      const chat = await Chat.find({ participants: { $all: [toIdUser, idUser] } }).limit(10).skip(skip);
       callback(chat);
     })
     

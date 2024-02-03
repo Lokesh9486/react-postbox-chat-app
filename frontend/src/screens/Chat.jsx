@@ -17,17 +17,19 @@ import {
   useSearchUserProfileQuery,
   useGetChatedUsersQuery,
 } from "../services/chatApi";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { socket } from "../utils/socket";
 import { getViewUserAction, viewUserAction } from "../features/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { DropDown } from "../components/DropDown";
+import UserCard from "../components/UserCard";
 
 export default function Chat() {
   const ulElement = useRef(null);
   const dispatch=useDispatch();
   const viewUser=useSelector(getViewUserAction);
   const [selectedUser, setSelectedUser] = useState();
+  const [showUserNav,setShowUserNav]=useState();
   const [message, setMessage] = useState("");
   const [specificUserMsg, setSpecificUserMsg] = useState([]);
   const [chatedUser, setChatUser] = useState([]);
@@ -39,6 +41,7 @@ export default function Chat() {
   const [deleteMessage, { data: deletedMessageResult }] = useDeleteMessageMutation();
   const {data:userData,isSuccess:userDataSuccess}=useGetUserQuery(viewUser,{skip:!viewUser});
   const [isConnected, setIsConnected] = useState(socket.connected);
+  const chatList=useRef(null);
 
   useEffect(()=>{
     if(selectedUser){
@@ -81,6 +84,7 @@ export default function Chat() {
     }
   };
 
+ 
   useEffect(() => {
     const connection=(socket)=>setIsConnected(true);
     const disConnection=()=> setIsConnected(false);
@@ -90,7 +94,8 @@ export default function Chat() {
       });
       setOnlineUser([...new Set([...onlineUsers,...value.filter(item=>item)])])
       setChatUser(data);
-      console.log("message ~ data:", value)
+      setShowUserNav(data?.chatUser)
+      console.log("message ~ data:", value,data)
     }
     const onlineUsersFun=(data) => {
       setOnlineUser([...onlineUsers,data])
@@ -98,9 +103,7 @@ export default function Chat() {
     const offlineUsers= (data) => {
       setOnlineUser(onlineUsers.filter(user=>user!=data))
     };
-    const deleteMsg=(data) =>{
-      console.log(data,specificUserMsg.filter(({_id})=>_id!==data));
-        setSpecificUserMsg(specificUserMsg.filter(({_id})=>_id!==data))};
+    
     const typing=data=> setTyping(data);
     const stopTyping=data=> setTyping(undefined);
 
@@ -109,7 +112,6 @@ export default function Chat() {
       socket.on("overAllMessage",overAllMessage);
       socket.on("onlineUsers", onlineUsersFun);
       socket.on("offlineUsers",offlineUsers);
-      socket.on("delete-msg", deleteMsg);
       socket.on("typing",typing);
       socket.on("stop typing",stopTyping);
       return () => {
@@ -117,7 +119,7 @@ export default function Chat() {
         socket.off("overAllMessage",overAllMessage);
         socket.off("onlineUsers", onlineUsersFun);
         socket.off("offlineUsers",offlineUsers);
-        socket.off("delete-msg", deleteMsg);
+        
         socket.off("typing",typing);
         socket.off("stop typing",stopTyping);
         socket.disconnect();
@@ -155,9 +157,14 @@ export default function Chat() {
         setSelectedUser(data.user._id);
       }
     }
+    const deleteMsg=(data) =>{
+        setSpecificUserMsg(specificUserMsg.filter(({_id})=>_id!==data))
+    }
     socket?.on("recieve-msg", demo);
+    socket.on("delete-msg", deleteMsg);
     return()=>{
       socket?.off("recieve-msg", demo);
+      socket.off("delete-msg", deleteMsg);
     }
   });
   
@@ -188,13 +195,24 @@ export default function Chat() {
     socket.emit("delete message",{
       id,
     },(response) => {
-      console.log(response)
+      setSpecificUserMsg(specificUserMsg.filter(({_id})=>_id!==response.id))
     });
   }
 
   const dropDownValue=[
     {name:"Delete",action:deletMsg}
   ]
+
+  const chatListRef=useCallback((node) => {
+    console.log("node:", node)
+    if(chatList.current)chatList.current.disconnect();
+    chatList.current=new IntersectionObserver(entries=>{
+        if(entries[0].isIntersecting){
+          console.log("asdf")
+        }
+    })
+    if(node)chatList.current.observe(node);
+  },[specificUserMsg])
   
   return (
     <>
@@ -213,11 +231,11 @@ export default function Chat() {
               ({ _id, firstName, lastName, email, role, avator,isOnline }) => (
                 <div
                   key={_id}
-                  className={`search-user ${
+                  className={`search-user rounded ${
                     activeUser(_id) ? "online-user" : ""
                   }
                ${selectedUser ? "active" : ""}`}
-                  onClick={() => setSelectedUser(_id)}
+                  onClick={() => {setSelectedUser(_id);setShowUserNav({_id, firstName, email, avator,isOnline })}}
                 >
                   <div className="image-con">
                     <img
@@ -227,8 +245,8 @@ export default function Chat() {
                     />
                   </div>
                   <div>
-                    <p>{firstName}</p>
-                    <p>{email}</p>
+                    <p className="general-text-bold text-capitalize">{firstName}</p>
+                    <p className="general-text">{email}</p>
                   </div>
                 </div>
               )
@@ -237,7 +255,7 @@ export default function Chat() {
           <ul>
             {chatedUser?.map((item, index) => (
               <NavUser
-                {...{ ...item, setSelectedUser, selectedUser, activeUser }}
+                {...{ ...item, setSelectedUser, selectedUser, activeUser,setShowUserNav}}
                 key={index}
               />
             ))}
@@ -246,13 +264,7 @@ export default function Chat() {
        {selectedUser?
         <div className="chat-container">
           <div className="chat-top-con">
-            {
-              (()=>{
-               const user = [...searchUser,chatedUser].find(({chatUser})=>chatUser?._id==selectedUser)
-               console.log("user:", user)
-              return <NavUser {...{ ...user, setSelectedUser, activeUser }}/>
-              })()
-            }
+            <UserCard {...{...showUserNav,activeUser}}/>
             <div className="video-call">
               <Link href={"/"}>
                 <img src={video} alt="video" />
@@ -265,8 +277,8 @@ export default function Chat() {
           <ul className="chat-body-content" ref={ulElement}>
             {specificUserMsg?.map(({ message, sendedBy, updatedAt,_id }, index) => {
               const isAnOtherUser = chatedUser?.find( ({ chatUser }) => chatUser._id == sendedBy )?.chatUser;
-              return (
-                <li key={index} className={!isAnOtherUser?"isAnotherUser":""}>
+              if(specificUserMsg.length === index + 1){
+                return <li className={!isAnOtherUser?"isAnotherUser":""} key={index} ref={chatListRef} >
                  {!isAnOtherUser&&
                   <DropDown>
                   <DropDown.Header></DropDown.Header>
@@ -297,7 +309,40 @@ export default function Chat() {
                     </p>
                   </div>
                 </li>
-              );
+              }
+              else{
+                return <li className={!isAnOtherUser?"isAnotherUser":""} key={index} >
+                   {!isAnOtherUser&&
+                    <DropDown>
+                    <DropDown.Header></DropDown.Header>
+                    <DropDown.Body value={dropDownValue} id={_id}></DropDown.Body>
+                    </DropDown>
+                   }
+                    <img
+                      className="chat-user-profile"
+                      onClick={()=>viewUserFun(isAnOtherUser?._id || userDetails._id)}
+                      src={
+                        isAnOtherUser?.avator ||
+                        userDetails.avator ||
+                        dummyprofile
+                      }
+                      alt="dummyprofile"
+                    />
+                    <div className="chat-msg-con">
+                      <div className="message-container">{message}</div>
+                      <p className="d-flex alig-items-center gap-2">
+                        <span className="user-data">
+                          {isAnOtherUser?.firstName || userDetails.firstName}
+                        </span>
+                        <span className="user-data">
+                          {updatedAt
+                            ? shortTime?.format(new Date(updatedAt))
+                            : null}
+                        </span>
+                      </p>
+                    </div>
+                  </li>
+              }
             })}
           </ul>
           {typing===selectedUser?<p>Loading...</p>:null}

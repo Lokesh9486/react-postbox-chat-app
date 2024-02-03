@@ -1,16 +1,17 @@
 import dummyprofile from "/assets/images/dummyprofile.png";
 import { useDispatch } from "react-redux";
-import "../styles/components/navUser.scss";
 import { chatApi } from "../services/chatApi";
 import { viewUserAction } from "../features/auth";
+import "../styles/components/navUser.scss";
 
-export const NavUser = ({setSelectedUser,selectedUser,activeUser,
-  chatUser:{_id,avator, firstName, lastName, email, role,isOnline },
-   message: {message, createdAt,unReadedMsg}={}}) => {
+export const NavUser = ({setSelectedUser,selectedUser,activeUser,setShowUserNav,
+   chatUser:{_id,avator, firstName, lastName, email, role,isOnline },
+  message: {message, createdAt,unReadedMsg}={}}) => {
     const dispatch=useDispatch();
     const selectUser=(id)=>{
       setSelectedUser(id);
-      dispatch(chatApi.util.invalidateTags(['Chat']))
+      setShowUserNav({_id, firstName, email, avator,isOnline })
+      // dispatch(chatApi.util.invalidateTags(['Chat']))
     }
     const viewUserFun=(id)=>dispatch(viewUserAction(id));
   return (
