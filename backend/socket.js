@@ -123,14 +123,22 @@ const initializeSocket = (server) => {
       //   user: { id },
       // } = req;
       const skip=data.skip?data.skip:0
-      const toUser = await User.findById(data);
+      const toUser = await User.findById(data.id);
       // if (!toUser) {
       //   return next(new ErrorHandler("Recived ID is not found"));
       // }
-      const toIdUser = new mongoose.Types.ObjectId(data);
+      const toIdUser = new mongoose.Types.ObjectId(data.id);
       const idUser = new mongoose.Types.ObjectId(id);
-      const chat = await Chat.find({ participants: { $all: [toIdUser, idUser] } }).limit(10).skip(skip);
-      callback(chat);
+
+      const dataForCount=await Chat.find({ participants: { $all: [toIdUser, idUser] } }).count();
+      const pageNumber = Math.ceil(dataForCount / 10);
+      const currentPage=Number(skip)||1;
+      const skipPage=10*(currentPage-1);
+      const skipCala=Number((dataForCount-(10*currentPage)<=0)? 0 : dataForCount-(10*currentPage));
+      console.log("skipCala:", skipCala)
+      const chat = await Chat.find({ participants: { $all: [toIdUser, idUser] } }).sort({createdAt:-1 }).limit(10).skip(skipCala).sort({createdAt:1 });
+      // console.log("chat:", chat)
+      callback({data:chat,nextPage: currentPage >= pageNumber ? null : currentPage + 1});
     })
     
     socket.on("typing",data=>{

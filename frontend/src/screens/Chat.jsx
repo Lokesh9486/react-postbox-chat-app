@@ -23,6 +23,7 @@ import { getViewUserAction, viewUserAction } from "../features/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { DropDown } from "../components/DropDown";
 import UserCard from "../components/UserCard";
+import useGetPage from "../HOC/useGetPage";
 
 export default function Chat() {
   const ulElement = useRef(null);
@@ -43,25 +44,24 @@ export default function Chat() {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const chatList=useRef(null);
 
+  const {data:fetchSpecificData,chatListRef}=useGetPage(socket,"getSpecificChat",{id:selectedUser},chatList)
   useEffect(()=>{
-    if(selectedUser){
-      socket.emit("getSpecificChat",selectedUser,(response) => {
-      console.log("socket.emit ~ response:", response)
-      setSpecificUserMsg(response);
-      })
+    if(fetchSpecificData){
+      setSpecificUserMsg(fetchSpecificData);
     }
-  },[selectedUser]);
+  },[fetchSpecificData]);
+
 
   useEffect(() => {
     if(deletedMessageResult){ setSpecificUserMsg(specificUserMsg.filter(({_id})=>_id!==deletedMessageResult.id)) }
   }, [deletedMessageResult]);
 
-  useEffect(()=>{
-    ulElement?.current?.scrollTo({
-      top: ulElement?.current?.scrollHeight,
-      behavior: "smooth",
-    });
-  },[specificUserMsg]);
+  // useEffect(()=>{
+  //   ulElement?.current?.scrollTo({
+  //     top: ulElement?.current?.scrollHeight,
+  //     behavior: "smooth",
+  //   });
+  // },[specificUserMsg]);
 
   const shortTime = new Intl.DateTimeFormat("en", {
     timeStyle: "short",
@@ -119,7 +119,6 @@ export default function Chat() {
         socket.off("overAllMessage",overAllMessage);
         socket.off("onlineUsers", onlineUsersFun);
         socket.off("offlineUsers",offlineUsers);
-        
         socket.off("typing",typing);
         socket.off("stop typing",stopTyping);
         socket.disconnect();
@@ -167,6 +166,12 @@ export default function Chat() {
       socket.off("delete-msg", deleteMsg);
     }
   });
+
+  useEffect(() => {
+    if (ulElement.current) {
+      ulElement.current.scrollTop = ulElement.current.scrollTop; // Restore scroll position
+    }
+  }, [fetchSpecificData]);
   
   const activeUser = (id) =>{
     return onlineUsers?.some((key) => key == id);
@@ -202,17 +207,6 @@ export default function Chat() {
   const dropDownValue=[
     {name:"Delete",action:deletMsg}
   ]
-
-  const chatListRef=useCallback((node) => {
-    console.log("node:", node)
-    if(chatList.current)chatList.current.disconnect();
-    chatList.current=new IntersectionObserver(entries=>{
-        if(entries[0].isIntersecting){
-          console.log("asdf")
-        }
-    })
-    if(node)chatList.current.observe(node);
-  },[specificUserMsg])
   
   return (
     <>
@@ -275,9 +269,10 @@ export default function Chat() {
             </div>
           </div>
           <ul className="chat-body-content" ref={ulElement}>
+          {console.log(specificUserMsg)}
             {specificUserMsg?.map(({ message, sendedBy, updatedAt,_id }, index) => {
               const isAnOtherUser = chatedUser?.find( ({ chatUser }) => chatUser._id == sendedBy )?.chatUser;
-              if(specificUserMsg.length === index + 1){
+              if(!index){
                 return <li className={!isAnOtherUser?"isAnotherUser":""} key={index} ref={chatListRef} >
                  {!isAnOtherUser&&
                   <DropDown>
