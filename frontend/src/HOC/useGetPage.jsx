@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 const useGetPage = (socket,event,selectedUser,ref) => {
   const [state,setState]=useState({});
-  const [count,setCount]=useState(0);
+  const parentRef=useRef(null);
   useEffect(()=>{
     if(selectedUser){
       socket.emit(event,selectedUser,(response) => {
@@ -12,14 +12,12 @@ const useGetPage = (socket,event,selectedUser,ref) => {
   },[selectedUser.id]);
 
   const chatListRef=useCallback((node) => {
-    console.log("node:", node)
     if(ref.current)ref.current.disconnect();
     ref.current=new IntersectionObserver(entries=>{
         if(entries[0].isIntersecting){
-          console.log(state.nextPage);
           if(state.nextPage){
             socket.emit(event,{id:selectedUser.id,skip:state.nextPage},(response) => {
-              setState({data:[...response.data,...state.data],nextPage:response.nextPage});
+              setState({data:[...state.data,...response.data],nextPage:response.nextPage});
             })
           }
         }
@@ -29,7 +27,7 @@ const useGetPage = (socket,event,selectedUser,ref) => {
     if(node)ref.current.observe(node);
   },[state]);
 
-  return {data:state?.data,chatListRef}
+  return {data:state?.data,chatListRef,parentRef}
 }
 
 export default useGetPage

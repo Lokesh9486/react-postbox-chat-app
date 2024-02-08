@@ -21,23 +21,34 @@ const initializeSocket = (server) => {
   });
 
   const getToken=(socket)=>{
-    const value=socket.handshake.headers.cookie;
-    console.log("value:", value)
-    const searchParams = new URLSearchParams(value);
-    console.log("searchParams:", searchParams)
+    const pattern = RegExp("token=.[^;]*");
+     const matched = socket.handshake.headers.cookie.match(pattern);
+     console.log("matched:", matched)
+    if(matched){
+        const [, token] = matched?.[0]?.split("=");
+        return token;
+    }
+    // const value=socket.handshake.headers.cookie;
+    // console.log("value:", value)
+    // const searchParams = new URLSearchParams(value);
+    // console.log("searchParams:", searchParams)
     
-    var myObject = {};
-    searchParams.forEach((value, key)=> {
-      myObject[key] = value;
-    });
-    console.log(myObject)
-    return myObject.token;
+    // var myObject = {};
+    // searchParams.forEach((value, key)=> {
+    //   myObject[key] = value;
+    // });
+    // console.log(myObject)
+    
   }
 
   userConectSocket = io.of("/UserConnect");
 
   userConectSocket.on("connection", async (socket) => {
    const token=getToken(socket);
+  //  const pattern = RegExp("token=.[^;]*");
+    // const matched = document.cookie.match(pattern);
+    // if(matched){
+    //     const [, token] = matched?.[0]?.split("=");
     console.log("token:", token)
     const { id } = jwt.verify(token, process.env.JWT_SECRET_KEY);
     socket.join(id);
@@ -136,7 +147,8 @@ const initializeSocket = (server) => {
       const skipPage=10*(currentPage-1);
       const skipCala=Number((dataForCount-(10*currentPage)<=0)? 0 : dataForCount-(10*currentPage));
       console.log("skipCala:", skipCala)
-      const chat = await Chat.find({ participants: { $all: [toIdUser, idUser] } }).sort({createdAt:-1 }).limit(10).skip(skipCala).sort({createdAt:1 });
+      const chat = await Chat.find({ participants: { $all: [toIdUser, idUser] } }).sort({createdAt:-1 }).limit(10).skip(skipCala);
+      // const chat = await Chat.find({ participants: { $all: [toIdUser, idUser] } }).sort({createdAt:-1 }).limit(10).skip(skipCala).sort({createdAt:1 });
       // console.log("chat:", chat)
       callback({data:chat,nextPage: currentPage >= pageNumber ? null : currentPage + 1});
     })

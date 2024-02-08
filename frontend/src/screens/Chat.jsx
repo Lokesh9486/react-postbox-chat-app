@@ -44,24 +44,17 @@ export default function Chat() {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const chatList=useRef(null);
 
-  const {data:fetchSpecificData,chatListRef}=useGetPage(socket,"getSpecificChat",{id:selectedUser},chatList)
+  const {data:fetchSpecificData,chatListRef,parentRef}=useGetPage(socket,"getSpecificChat",{id:selectedUser},chatList)
+  
   useEffect(()=>{
     if(fetchSpecificData){
       setSpecificUserMsg(fetchSpecificData);
     }
   },[fetchSpecificData]);
 
-
   useEffect(() => {
     if(deletedMessageResult){ setSpecificUserMsg(specificUserMsg.filter(({_id})=>_id!==deletedMessageResult.id)) }
   }, [deletedMessageResult]);
-
-  // useEffect(()=>{
-  //   ulElement?.current?.scrollTo({
-  //     top: ulElement?.current?.scrollHeight,
-  //     behavior: "smooth",
-  //   });
-  // },[specificUserMsg]);
 
   const shortTime = new Intl.DateTimeFormat("en", {
     timeStyle: "short",
@@ -95,7 +88,7 @@ export default function Chat() {
       setOnlineUser([...new Set([...onlineUsers,...value.filter(item=>item)])])
       setChatUser(data);
       setShowUserNav(data?.chatUser)
-      console.log("message ~ data:", value,data)
+      // console.log("message ~ data:", value,data)
     }
     const onlineUsersFun=(data) => {
       setOnlineUser([...onlineUsers,data])
@@ -167,12 +160,6 @@ export default function Chat() {
     }
   });
 
-  useEffect(() => {
-    if (ulElement.current) {
-      ulElement.current.scrollTop = ulElement.current.scrollTop; // Restore scroll position
-    }
-  }, [fetchSpecificData]);
-  
   const activeUser = (id) =>{
     return onlineUsers?.some((key) => key == id);
     }
@@ -268,11 +255,10 @@ export default function Chat() {
               </Link>
             </div>
           </div>
-          <ul className="chat-body-content" ref={ulElement}>
-          {console.log(specificUserMsg)}
+          <ul className="chat-body-content d-flex flex-column-reverse" style={{overflowAnchor: "none"}} ref={ulElement}>
             {specificUserMsg?.map(({ message, sendedBy, updatedAt,_id }, index) => {
               const isAnOtherUser = chatedUser?.find( ({ chatUser }) => chatUser._id == sendedBy )?.chatUser;
-              if(!index){
+              if(specificUserMsg.length==index+1){
                 return <li className={!isAnOtherUser?"isAnotherUser":""} key={index} ref={chatListRef} >
                  {!isAnOtherUser&&
                   <DropDown>
