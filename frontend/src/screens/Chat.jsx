@@ -88,7 +88,6 @@ export default function Chat() {
       setOnlineUser([...new Set([...onlineUsers,...value.filter(item=>item)])])
       setChatUser(data);
       setShowUserNav(data?.chatUser)
-      // console.log("message ~ data:", value,data)
     }
     const onlineUsersFun=(data) => {
       setOnlineUser([...onlineUsers,data])

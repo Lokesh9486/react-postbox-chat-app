@@ -1,15 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import App, { loader as rootLoader } from "./App";
+import App from "./App";
 import SignIn from "./screens/Signin";
-import { Provider } from "react-redux";
 import Providers from "./services/store.jsx";
 import Signup from "./screens/SignUp.jsx";
 import Otp from "./screens/Otp.jsx";
 import UserLayout from "./screens/AuthenticLayout.jsx";
 import Chat from "./screens/Chat.jsx";
+import "./index.css";
 
 const router = createBrowserRouter([
   {
@@ -19,9 +18,9 @@ const router = createBrowserRouter([
         <App />
       </Providers>
     ),
-    // loader:rootLoader
     children: [
       {
+        index:true,
         path: "signin",
         element: <SignIn />,
       },

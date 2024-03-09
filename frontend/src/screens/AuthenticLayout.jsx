@@ -1,4 +1,3 @@
-import "../styles/pages/home.scss";
 import {Link,useNavigate} from "react-router-dom";
 import logo from "/assets/images/postboxlogo.png";
 import { LinkComponent } from "../components/LinkComponent";
@@ -8,6 +7,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getViewUserAction, viewUserAction } from "../features/auth";
 import Skeleton from "../components/Skeleton";
+import "../styles/pages/home.scss";
 
 export default function UserLayout({ children }) {
   const viewUser=useSelector(getViewUserAction);
@@ -50,7 +50,8 @@ export default function UserLayout({ children }) {
     if (isError && !isSuccess) {
       navigate("/signin");
     }
-  }, [isError,isSuccess]);
+  }, [isError,isSuccess,navigate]);
+
   return (
     <main className="chat-section">
       <section className={`main-container ${viewUser ? "active" : ""}`}>
