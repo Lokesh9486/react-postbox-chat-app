@@ -10,7 +10,7 @@ let userConectSocket;
 
 const initializeSocket = (server) => {
   io = socketIO(server, {
-    pingTineOut: 60000,
+    maxHttpBufferSize: 1e8,
     cors: {
       origin: "http://localhost:5173",
       credentials: true
@@ -23,7 +23,7 @@ const initializeSocket = (server) => {
   const getToken=(socket)=>{
     const pattern = RegExp("token=.[^;]*");
      const matched = socket.handshake.headers.cookie.match(pattern);
-     console.log("matched:", matched)
+    //  console.log("matched:", matched)
     if(matched){
         const [, token] = matched?.[0]?.split("=");
         return token;
@@ -49,7 +49,7 @@ const initializeSocket = (server) => {
     // const matched = document.cookie.match(pattern);
     // if(matched){
     //     const [, token] = matched?.[0]?.split("=");
-    console.log("token:", token)
+    // console.log("token:", token)
     const { id } = jwt.verify(token, process.env.JWT_SECRET_KEY);
     socket.join(id);
     await User.findByIdAndUpdate({ _id: id }, { $set: { isOnline: true} });
@@ -94,7 +94,8 @@ const initializeSocket = (server) => {
 
 
     socket.on("send message",async(data,callback)=>{
-      const { message, reciver  } = data;
+      const { message,uploadImg, reciver  } = data;
+      console.log("uploadImg:", uploadImg)
     
       const chat = await Chat.create({
         message,
@@ -147,7 +148,7 @@ const initializeSocket = (server) => {
       const skipPage=10*(currentPage-1);
       const skipCala=Number((dataForCount-(10*currentPage)<=0)? 0 : dataForCount-(10*currentPage));
       console.log("skipCala:", skipCala)
-      const chat = await Chat.find({ participants: { $all: [toIdUser, idUser] } }).sort({createdAt:-1 }).limit(10).skip(skipCala);
+      const chat = await Chat.find({ participants: { $all: [toIdUser, idUser] } }).sort({createdAt:1 }).limit(10).skip(skipCala);
       // const chat = await Chat.find({ participants: { $all: [toIdUser, idUser] } }).sort({createdAt:-1 }).limit(10).skip(skipCala).sort({createdAt:1 });
       // console.log("chat:", chat)
       callback({data:chat,nextPage: currentPage >= pageNumber ? null : currentPage + 1});
@@ -160,7 +161,7 @@ const initializeSocket = (server) => {
       socket.to(data).emit("stop typing",false);
     });
     socket.on("disconnect", async () => {
-      console.log(token)
+      // console.log(token)
       const { id } = jwt.verify(token, process.env.JWT_SECRET_KEY);
       await User.findByIdAndUpdate({ _id: id }, { $set: { isOnline: false,lastSeen: Date.now() } });
       socket.broadcast.emit("offlineUsers", id);

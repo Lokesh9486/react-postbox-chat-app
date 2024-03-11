@@ -8,15 +8,13 @@ function App() {
   const navigate = useNavigate();
   const token = getCookies();
   useEffect(()=>{
-    console.log("entery point")
-    if (!token) {
-      return navigate("/signin");
-    }
-    else{
-      return navigate("/chat");
-    }
+    // if (!token) {
+    //   return navigate("/signin");
+    // }
+    // else{
+    //   return navigate("/chat");
+    // }
   },[token,navigate])
-
 
   return <Outlet />;
 }
