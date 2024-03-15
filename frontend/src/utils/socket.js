@@ -1,6 +1,5 @@
 import {io} from "socket.io-client";
-import getCookies from "./getCookies";
-export const socket = io("http://localhost:8000/UserConnect",{
+export const socket = io("http://192.168.1.16:8000/UserConnect",{
   autoConnect: false,
   withCredentials:true,
         // auth:{

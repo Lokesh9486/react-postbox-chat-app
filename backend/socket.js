@@ -12,7 +12,8 @@ const initializeSocket = (server) => {
   io = socketIO(server, {
     maxHttpBufferSize: 1e8,
     cors: {
-      origin: "http://localhost:5173",
+      origin: "*",
+      // origin: ["http://localhost:5173","*"],
       credentials: true
     },
   });
@@ -146,9 +147,10 @@ const initializeSocket = (server) => {
       const pageNumber = Math.ceil(dataForCount / 10);
       const currentPage=Number(skip)||1;
       const skipPage=10*(currentPage-1);
-      const skipCala=Number((dataForCount-(10*currentPage)<=0)? 0 : dataForCount-(10*currentPage));
-      console.log("skipCala:", skipCala)
-      const chat = await Chat.find({ participants: { $all: [toIdUser, idUser] } }).sort({createdAt:1 }).limit(10).skip(skipCala);
+      // console.log("skipPage:", skipPage)
+      // const skipCala=Number((dataForCount-(10*currentPage)<=0)? 0 : dataForCount-(10*currentPage));
+      // console.log("skipCala:", skipCala)
+      const chat = await Chat.find({ participants: { $all: [toIdUser, idUser] } }).sort({createdAt:-1}).limit(10).skip(skipPage);
       // const chat = await Chat.find({ participants: { $all: [toIdUser, idUser] } }).sort({createdAt:-1 }).limit(10).skip(skipCala).sort({createdAt:1 });
       // console.log("chat:", chat)
       callback({data:chat,nextPage: currentPage >= pageNumber ? null : currentPage + 1});

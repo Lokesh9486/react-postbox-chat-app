@@ -49,7 +49,6 @@ const Otp = () => {
 
   useEffect(() =>{
     if(!localStorage.getItem("postman")) return navigate("/signup");
-    // if(JSON?.parse(localStorage?.getItem("postman")||{})){
         const {email,OTP}=JSON.parse(localStorage.getItem("postman"));
         if(!email||!OTP)return navigate("/signup");
         setEmail(email);
@@ -63,9 +62,7 @@ const Otp = () => {
          setTime({min,sec});
       } , 1000);
 
-    // }
    return()=>{
-    console.log("afhasfjh")
     clearInterval(interval);
     localStorage.removeItem("postman");
   }
@@ -76,7 +73,7 @@ const Otp = () => {
       // setCookie('token', data.token,{maxAge: 7 * 24 * 60 * 60 * 1000,path:"/"  });
       // document.cookie = `token= ${data.token}; expires= ${new Date( Date.now() + 7 * 24 * 60 * 60 * 1000 ) }; path=/;`;
       // localStorage.removeItem("postman");
-      // setTimeout(()=>navigate('/'),1000);
+      setTimeout(()=>navigate('/chat'),1000);
     }
   },[isSuccess]);
 

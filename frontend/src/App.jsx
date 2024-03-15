@@ -8,13 +8,13 @@ function App() {
   const navigate = useNavigate();
   const token = getCookies();
   useEffect(()=>{
-    // if (!token) {
-    //   return navigate("/signin");
-    // }
-    // else{
-    //   return navigate("/chat");
-    // }
-  },[token,navigate])
+    if (!token) {
+      return navigate("/signin");
+    }
+    else{
+      return navigate("/chat");
+    }
+  },[])
 
   return <Outlet />;
 }

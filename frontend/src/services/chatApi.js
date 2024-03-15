@@ -5,7 +5,7 @@ const { createApi, fetchBaseQuery } = rtkQuery.default ?? rtkQuery;
 export const chatApi = createApi({
   reducerPath: "chatApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8000/chat",
+    baseUrl: "http://192.168.1.16:8000/chat",
     credentials: "include"
     // prepareHeaders: (headers) => {
     //   const token=getCookies()
